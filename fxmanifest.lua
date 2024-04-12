@@ -1,19 +1,30 @@
-name "mustache-stashes"
-author "mustache_dom"
-description "stashes by mustache dom"
-fx_version "cerulean"
-game "gta5"
-version '2.1.0'
+fx_version 'cerulean'
+games { 'gta5' }
+
+author 'Murai Dev'
+discord '.mur4i'
+description 'In-game stashe creator for QBOX'
+version '1.0.1'
+
+ox_lib 'locale'
+
+shared_scripts {
+    '@ox_lib/init.lua',
+	'@qbx_core/modules/lib.lua',
+	'@qbx_core/modules/playerdata.lua',
+	'shared/**.lua',
+}
+
+files {
+	'locales/*.json'
+}
 
 client_scripts {
 	'client/**.lua',
 }
+
 server_scripts {
 	'server/**.lua',
-}
-shared_scripts {
-    'shared/**.lua',
-	 '@ox_lib/init.lua',
 }
 
 lua54 'yes'

@@ -1,0 +1,57 @@
+{
+    "openadm": {
+        "title": "Criador de Baús",
+        "options_title": "Criar novo Baú",
+        "options_description": "Cria um novo Baú",
+        "options2_title": "Teleportar ao Baú",
+        "options2_description": "Teleporta até os seus Baús",
+        "options2_description2": "Clique para teleportar",
+        "options2_title2": "Teleportar",
+        "options2_description3": "Teleportado para",
+        "options2_title3": "Teleportar ao Baú desejado",
+        "options3_title": "Deletar um Baú existente",
+        "options3_description": "Deleta um Baú que foi criado",
+        "options3_description2": "Clique para Deletar",
+        "options3_description3": "Baú deletado com sucesso",
+        "options3_description4": "Não foi possível excluir o baú",
+        "options3_title2": "Deletar um Baú"
+    },
+    "target": {
+        "input": "Digite sua senha",
+        "label": "Senha",
+        "description": "Qual sua senha?"
+    },
+    "raycast": {
+        "title": "Coordenadas do Baú:",
+        "e_button": "[E] para SALVAR",
+        "del_button": "[DEL] para CANCELAR"
+    },
+    "createmenu": {
+        "title": "Criar Baú",
+        "input1": "Nome do Baú",
+        "description1": "Nome que irá aparecer dentro do baú.",
+        "input2": "Job",
+        "description2": "Emprego (opcional)",
+        "input3": "Gang",
+        "description3": "Gangue (opcional)",
+        "input4": "Cargo",
+        "description4": "Rank do emprego ou gangue (opcional)",
+        "input5": "Item",
+        "description5": "Item necessário para abrir o baú (opcional)",
+        "input6": "Quantidade de Slots",
+        "description6": "Número de slots do baú (opcional)",
+        "input7": "Peso do baú",
+        "description7": "O peso inicial do baú (opcional)",
+        "input8": "Senha",
+        "description8": "Digite uma senha para abrir o baú (opcional)",
+        "input9": "ID do Cidadão",
+        "description9": "Digite o Citizen ID permitido (opcional)",
+        "input10": "Descrição do Target",
+        "description10": "Digite caso queira personalizar a mensagem padrão 'Abrir baú' (opcional)",
+        "notify_sucess": "Baú criado com sucesso!",
+        "notify_error": "Criação de baú cancelada!"
+    },
+    "command": {
+        "help": "Crie um novo baú [apenas admin]"
+    }
+}
