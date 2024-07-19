@@ -96,7 +96,8 @@ RegisterNetEvent('mri_Qstashes:start', function(stashesTable)
         if v.slots == nil or "" then v.slots = Config.Defaultslot end
         if v.item == nil or "" then v.item = 1 end
         if v.cid == nil or "" then v.cid = 2 end
-        if v.rank == nil or "" then v.rank = 0 end
+        if v.rank then v.rank = tonumber(v.rank) end
+        if v.rank == nil then v.rank = 0 end
         if v.password == nil then v.password = 0 end
         stashes[k] = exports.ox_target:addBoxZone({
             coords = v.loc,
@@ -124,7 +125,7 @@ RegisterNetEvent('mri_Qstashes:start', function(stashesTable)
                         end
                     end,
                         canInteract = function()
-                        if QBX.PlayerData.job.name == v.job or v.job == "" then  
+                        if QBX.PlayerData.job.name == v.job or v.job == "" then 
                             if QBX.PlayerData.job.grade.level >= v.rank or v.job == "" then
                                 if QBX.PlayerData.gang.name == v.gang and QBX.PlayerData.gang.grade.level >= v.rank or v.gang == "" then
                                     if v.item == 1 or QBX.HasItem(v.item) then
