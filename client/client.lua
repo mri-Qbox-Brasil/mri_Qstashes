@@ -90,7 +90,7 @@ RegisterNetEvent('mri_Qstashes:start', function(stashesTable)
     for k, v in pairs (stashesTable) do 
         if v.job == nil then v.job = "" end
         if v.gang == nil then v.gang = "" end
-        if v.targetlabel == nil or "" then v.targetlabel = Config.DefaultMessage end
+        if v.targetlabel == "" then v.targetlabel = Config.DefaultMessage end
         if v.weight == nil or "" then v.weight = Config.Defaultweight * 1000 end
         if v.weight then v.weight = tonumber(v.weight) * 1000 end
         if v.slots == nil or "" then v.slots = Config.Defaultslot end
