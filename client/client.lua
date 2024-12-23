@@ -1,6 +1,7 @@
 RegisterNetEvent("mri_Qstashes:openAdm", function()
     lib.registerContext({
         id = 'stashes_create',
+        menu = 'menu_gerencial',
         title = locale("openadm.title"),
         options = {
             {
@@ -24,17 +25,21 @@ RegisterNetEvent("mri_Qstashes:openAdm", function()
                             icon = 'marker',
                             description = locale("openadm.options2_description2"),
                             onSelect = function()
-                               SetEntityCoords(cache.ped, locations[i].loc.x, locations[i].loc.y, locations[i].loc.z)
-                               lib.notify({
+                            SetEntityCoords(cache.ped, locations[i].loc.x, locations[i].loc.y, locations[i].loc.z)
+                            lib.notify({
                                     title = locale("openadm.options2_title2"),
                                     description = locale("openadm.options2_description3")..' ' .. locations[i].name,
                                     type = 'success'
                                 })
+                                Citizen.Wait(500) -- Espera 500ms (meio segundo)
+
+                                lib.showContext('stashes_create')
                             end,
                         }
                     end
                     lib.registerContext({
                         id = 'stashes_teleport',
+                        menu = 'stashes_create',
                         title = locale("openadm.options2_title3"),
                         options = options
                     })
@@ -68,17 +73,21 @@ RegisterNetEvent("mri_Qstashes:openAdm", function()
                                         type = 'error'
                                     })
                                 end
+                                Citizen.Wait(500) -- Aguarda 500 ms (meio segundo)
+                                lib.showContext('stashes_create')
                             end,
                         }
                     end
                     lib.registerContext({
                         id = 'stashes_delete',
+                        menu = 'stashes_create',
                         title = locale("openadm.options3_title2"),
                         options = options
                     })
                     lib.showContext('stashes_delete')
                 end,
-            },        
+            },
+                    
         }
     })
     lib.showContext('stashes_create')
