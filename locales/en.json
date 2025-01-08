@@ -48,6 +48,8 @@
         "description9": "Enter allowed Citizen ID (optional)",
         "input10": "Target Description",
         "description10": "Enter if you want to customize the default 'Open Stash' message (optional)",
+        "input11": "Discord Webhook",
+        "description11": "Add the discord webhook to get a log of what is in and out of the chest",
         "notify_sucess": "Stash created successfully!",
         "notify_error": "Stash creation canceled!"
     },
