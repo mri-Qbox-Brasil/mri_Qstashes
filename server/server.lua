@@ -156,10 +156,10 @@ function WebhookPlayer(payload, webhookURL, inventory)
 
     if payload.fromType == "player" and payload.toType == "stash" then
         description =
-            ('**Cidadão: %s \n **Discord:** <@%s> \n **ID: %s** \n **Colocou** **Item:** %s \n **Quantidade:** %s \n **Metadata:** %s \n **Bau:** %s \n **coordenadas** %s.')
+            ('Cidadão: **%s** \nDiscordID: <@%s> \nID: **%s** \nColocou Item: **%s** \nQuantidade: **%s** \nMetadata: **%s** \nNome do Bau: **%s** \nCoordenadas: ```%s```')
     elseif payload.fromType == "stash" and payload.toType == "player" then
         description =
-            ('**Cidadão: %s \n **Discord:** <@%s> \n **ID: %s** \n **Pegou** **Item:** %s \n **Quantidade:** %s \n **Metadata:** %s \n **Bau:** %s \n **coordenadas** %s.')
+            ('Cidadão: **%s** \nDiscordID: <@%s> \nID: **%s** \nPegou Item: **%s** \nQuantidade: **%s** \nMetadata: **%s** \nNome do Bau: **%s** \nCoordenadas: ```%s```')
     end
 
     sendWebhook(webhookURL, {{
