@@ -48,6 +48,8 @@
         "description9": "Digite o Citizen ID permitido (opcional)",
         "input10": "Descrição do Target",
         "description10": "Digite caso queira personalizar a mensagem padrão 'Abrir baú' (opcional)",
+        "input11": "Discord Webhook",
+        "description11": "Adicione o webhook do discord para obter um log do que é colocado e retirado do baú",
         "notify_sucess": "Baú criado com sucesso!",
         "notify_error": "Criação de baú cancelada!"
     },

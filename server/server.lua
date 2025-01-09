@@ -2,10 +2,9 @@
 ------------- data Set
 ---------------------------------------------------------------
 local stashesTable = {}
-
 RegisterNetEvent("insertStashesData", function(input, loc)
     stashesTable[#stashesTable + 1] = {
-        id = math.random(100000,999999),
+        id = math.random(100000, 999999),
         name = input[1] or nil,
         job = input[2] or nil,
         gang = input[3] or nil,
@@ -16,7 +15,8 @@ RegisterNetEvent("insertStashesData", function(input, loc)
         password = input[8] or nil,
         citizenID = input[9] or nil,
         targetlabel = input[10] or nil,
-        loc = loc or nil,
+        webhookURL = input[11] or nil,
+        loc = loc or nil
     }
     SaveStashesData()
 end)
@@ -41,7 +41,7 @@ function SaveStashesData()
     local jsonData = json.encode(stashesTable)
     SaveResourceFile(GetCurrentResourceName(), "data.json", jsonData, -1)
     TriggerClientEvent('mri_Qstashes:start', -1, stashesTable)
-    RegisterStashData()
+    LoadStashesData()
 end
 
 function LoadStashesData()
@@ -52,15 +52,33 @@ function LoadStashesData()
     RegisterStashData()
 end
 
+local function RegisterHookData(stash)
+    local webhookURL = ""
+    local inventory = ""
+    exports.ox_inventory:registerHook('swapItems', function(payload)
+            if payload.fromInventory == stash.id then
+                webhookURL = stash.webhookURL
+                inventory = stash.label
+                WebhookPlayer(payload, webhookURL, inventory)
+            elseif payload.toInventory == stash.id and payload.action == "move"then
+                webhookURL = stash.webhookURL
+                inventory = stash.label
+                WebhookPlayer(payload, webhookURL, inventory)
+            end
+    end, options)
+end
+
 function RegisterStashData()
-    for k, v in pairs (stashesTable) do 
+    for k, v in pairs(stashesTable) do
         local stash = {
-        id = "mri_Qstashes"..v.id,
-        label = v.name,
-        slots = v.slotSize,
-        weight = tonumber(v.weight),
+            id = "mri_Qstashes" .. v.id,
+            label = v.name,
+            slots = v.slotSize,
+            webhookURL = v.webhookURL,
+            weight = tonumber(v.weight)
         }
         exports.ox_inventory:RegisterStash(stash.id, stash.label, stash.slots, stash.weight)
+        RegisterHookData(stash)
     end
 end
 
@@ -74,9 +92,11 @@ end)
 AddEventHandler('onResourceStart', function(resourceName)
     if GetCurrentResourceName() == resourceName then
         LoadStashesData()
+        if GetResourceState('ox_inventory') ~= 'started' then
+            return print("[mri_Qstashes] - ox_inventory não encontrado.")
+        end
         Wait(1000)
         TriggerClientEvent('mri_Qstashes:start', -1, stashesTable)
-        print("[mri_Qstashes] - Loaded database.")
     end
 end)
 
@@ -94,14 +114,60 @@ RegisterNetEvent("mri_Qstashes:server:Unload", function()
     TriggerClientEvent("mri_Qstashes:delete", src, stashesTable)
 end)
 
-
 ---------------------------------------------------------------
 ------------- addCommand
 ---------------------------------------------------------------
 lib.addCommand(Config.Command, {
     help = locale("command.help"),
-    restricted = 'group.admin',
+    restricted = 'group.admin'
 }, function(source, args, raw)
     local src = source
     TriggerClientEvent('mri_Qstashes:openAdm', src)
 end)
+
+---------------------------------------------------------------
+------------- Webhook Discord
+---------------------------------------------------------------
+
+local function sendWebhook(webhook, data)
+    if webhook == nil then
+        print('^1[logs] ^0Webhook ' .. webhook .. ' does not exist.')
+        return
+    end
+
+    PerformHttpRequest(webhook, function(err, text, headers)
+    end, 'POST', json.encode({
+        embeds = data
+    }), {
+        ['Content-Type'] = 'application/json'
+    })
+end
+
+function WebhookPlayer(payload, webhookURL, inventory)
+    local webhookURL = webhookURL
+    local description = ""
+    if not webhookURL then
+        return
+    end
+    local playerName = GetPlayerName(payload.source)
+    local playerdiscord = GetPlayerIdentifierByType(payload.source, 'discord'):match("%d+")
+    local playerIdentifier = GetPlayerIdentifiers(payload.source)[1]
+    local playerCoords = GetEntityCoords(GetPlayerPed(payload.source))
+
+    if payload.fromType == "player" and payload.toType == "stash" then
+        description =
+            ('Cidadão: **%s** \nDiscordID: <@%s> \nID: **%s** \nColocou Item: **%s** \nQuantidade: **%s** \nMetadata: **%s** \nNome do Bau: **%s** \nCoordenadas: ```%s```')
+    elseif payload.fromType == "stash" and payload.toType == "player" then
+        description =
+            ('Cidadão: **%s** \nDiscordID: <@%s> \nID: **%s** \nPegou Item: **%s** \nQuantidade: **%s** \nMetadata: **%s** \nNome do Bau: **%s** \nCoordenadas: ```%s```')
+    end
+
+    sendWebhook(webhookURL, {{
+        title = 'Bau',
+        description = description:format(playerName, playerdiscord, payload.source, payload.fromSlot.name,
+            payload.fromSlot.count, json.encode(payload.fromSlot.metadata), inventory,
+            ('%s, %s, %s'):format(playerCoords.x, playerCoords.y, playerCoords.z)),
+        color = Config.Color
+    }})
+end
+
