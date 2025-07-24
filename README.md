@@ -90,3 +90,101 @@ Config.AdminPerms = { "admin" } -- Permissões ace para admin (pode adicionar ma
 - [wNpcCreator](https://github.com/WhereiamL/wNpcCreator/) (menu system)
 - [md-stashes](https://github.com/Mustachedom/md-stashes) (base)
 - [ox_doors](https://github.com/overextended/ox_doors/) (raycast system)
+
+---
+
+# English Version
+
+# mri_Qstashes
+
+Advanced stash system for FiveM servers, fully manageable in-game by administrators, with configurable permissions, ox_inventory integration, contextual menus and multi-language support.
+
+---
+
+## Features
+
+- **Create, edit, teleport and delete stashes** directly in-game via the admin menu.
+- **Configurable admin permissions** via ace or custom groups.
+- **Full protection**: only admins can access and perform administrative actions.
+- **Intuitive menu**: all stashes listed, with a submenu for each action (edit, teleport, delete, move).
+- **Easy configuration** of slots, weight, password, job, gang, rank, required item, citizenID, label and webhook.
+- **Integration with ox_inventory** and ox_target for 3D interaction.
+- **Webhook logs** for stash item movements.
+- **Multi-language support** (en, pt-br).
+
+---
+
+## Dependencies
+
+- [ox_lib](https://github.com/overextended/ox_lib)
+- [ox_target](https://github.com/overextended/ox_target)
+- [ox_inventory](https://github.com/overextended/ox_inventory)
+- [qbx_core](https://github.com/qbcore-framework/qb-core) (or similar)
+
+---
+
+## Installation
+
+1. Download and place the `mri_Qstashes` folder in `resources/[mri]`.
+2. Add to your `server.cfg`:
+   ```
+   ensure mri_Qstashes
+   ```
+3. Give ace permission to admins in your `server.cfg`:
+   ```
+   add_ace group.admin admin allow
+   ```
+   Or adjust according to your permission system.
+
+---
+
+## Configuration
+
+File: `shared/Config.lua`
+```lua
+Config = {}
+Config.Command = "bau" -- Command to open the admin menu
+Config.Defaultslot = 50 -- Default stash slots
+Config.Defaultweight = 1000 -- Default weight (in kg)
+Config.DefaultMessage = "Open stash" -- Default target message
+Config.Debug = false -- Enable debug
+Config.AdminPerms = { "admin" } -- Ace permissions for admin (can add more, e.g.: {"admin", "god"})
+```
+
+---
+
+## How to use
+
+- **Open admin menu:**  
+  Use the configured command (`/bau` by default) in chat. Only admins can open.
+- **In the menu:**  
+  - "Create new stash": allows you to create a new stash at the desired location (using raycast).
+  - Click any listed stash to open the submenu:
+    - **Edit:** change all stash settings.
+    - **Move:** change the stash location.
+    - **Teleport:** teleport your character to the stash.
+    - **Delete:** remove the stash from the server.
+- **Accessing the stash:**  
+  Players interact normally via ox_target, respecting job, gang, item, password, etc. restrictions.
+
+---
+
+## Localization
+
+- Language files in `locales/en.json` and `locales/pt-br.json`.
+- Adapt as needed for your server.
+
+---
+
+## Security
+
+- All admin actions are protected both on client and server.
+- Only those with permission defined in `Config.AdminPerms` can create, edit or delete stashes.
+
+---
+
+## Credits
+
+- [wNpcCreator](https://github.com/WhereiamL/wNpcCreator/) (menu system)
+- [md-stashes](https://github.com/Mustachedom/md-stashes) (base)
+- [ox_doors](https://github.com/overextended/ox_doors/) (raycast system)
