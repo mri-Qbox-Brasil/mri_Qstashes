@@ -14,7 +14,10 @@
         "options3_description2": "Clique para Deletar",
         "options3_description3": "Baú deletado com sucesso",
         "options3_description4": "Não foi possível excluir o baú",
-        "options3_title2": "Deletar um Baú"
+        "options3_title2": "Deletar um Baú",
+        "options4_title": "Editar um Baú existente",
+        "options4_description": "Edite um Baú já criado",
+        "options4_description2": "Clique para editar"
     },
     "target": {
         "input": "Digite sua senha",

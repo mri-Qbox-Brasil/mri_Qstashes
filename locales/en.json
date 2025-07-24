@@ -14,7 +14,10 @@
         "options3_description2": "Click to Delete",
         "options3_description3": "Stash deleted successfully",
         "options3_description4": "Unable to delete the stash",
-        "options3_title2": "Delete a Stash"
+        "options3_title2": "Delete a Stash",
+        "options4_title": "Edit Existing Stash",
+        "options4_description": "Edit a stash you have created",
+        "options4_description2": "Click to edit"
     },
     "target": {
         "input": "Enter your password",
