@@ -352,40 +352,6 @@ RegisterNetEvent('mri_Qstashes:start', function(stashesTable)
                                         end
                                     end
                                 end
-                            },
-                            {
-                                title = 'Aumentar capacidade',
-                                icon = 'fa-solid fa-arrow-up',
-                                description = 'Pagar ' .. (v.upgradePrice or 0) .. ' para aumentar em ' .. (v.upgradeAmount or 0) .. 'kg',
-                                onSelect = function()
-                                    local price = v.upgradePrice or 0
-                                    local amount = v.upgradeAmount or 0
-                                    if price <= 0 or amount <= 0 then
-                                        lib.notify({ type = 'error', description = 'Este baú não pode ser melhorado.' })
-                                        return
-                                    end
-                                    local input = lib.inputDialog('Aumentar capacidade', {{
-                                        type = 'confirm',
-                                        label = 'Pagar ' .. price .. ' para aumentar em ' .. amount .. 'kg'
-                                    }})
-                                    if input and input[1] then
-                                        TriggerServerEvent('mri_Qstashes:upgradeStash', v.id)
-                                    end
-                                end,
-                                canInteract = function()
-                                    -- Só aparece se o player pode usar o baú normalmente
-                                    if QBX.PlayerData.job.name == v.job or v.job == "" then
-                                        if QBX.PlayerData.job.grade.level >= v.rank or v.job == "" then
-                                            if QBX.PlayerData.gang.name == v.gang and QBX.PlayerData.gang.grade.level >= v.rank or v.gang == "" then
-                                                if v.item == 1 or QBX.HasItem(v.item) then
-                                                    if QBX.PlayerData.citizenid == v.cid or v.cid == 2 then
-                                                        return true
-                                                    end
-                                                end
-                                            end
-                                        end
-                                    end
-                                end
                             }
                         }
                     })
