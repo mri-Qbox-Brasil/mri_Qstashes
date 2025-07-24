@@ -1,19 +1,19 @@
 RegisterNetEvent("mri_Qstashes:openAdm", function(searchTerm)
     if not lib.callback.await('mri_Qstashes:isAdmin', false) then
-        lib.notify({ type = 'error', description = 'Acesso negado: apenas administradores.' })
+        lib.notify({ type = 'error', description = locale("error.admin_only") })
         return
     end
     local stashes = lib.callback.await('stashesGetAll', false)
     local options = {
         {
-            title = '🔍 Buscar baú...',
+            title = locale("menu.search_title"),
             icon = 'search',
-            description = 'Filtrar baús por nome, job, gang, citizenID, etc.',
+            description = locale("menu.search_description"),
             onSelect = function()
-                local input = lib.inputDialog('Buscar baú', {{
+                local input = lib.inputDialog(locale("menu.search_title"), {{
                     type = 'input',
-                    label = 'Digite o termo de busca',
-                    description = 'Pode ser nome, job, gang, citizenID, etc.'
+                    label = locale("menu.search_input_label"),
+                    description = locale("menu.search_input_desc")
                 }})
                 if input and input[1] and input[1] ~= '' then
                     TriggerEvent('mri_Qstashes:openAdm', input[1])
@@ -21,9 +21,9 @@ RegisterNetEvent("mri_Qstashes:openAdm", function(searchTerm)
             end
         },
         {
-            title = locale("openadm.options_title") or 'Criar novo baú',
+            title = locale("menu.create_title"),
             icon = 'hand',
-            description = locale("openadm.options_description") or 'Clique para criar um novo baú',
+            description = locale("menu.create_description"),
             onSelect = function()
                 TriggerEvent('mri_Qstashes:client:doray')
             end
@@ -50,28 +50,28 @@ RegisterNetEvent("mri_Qstashes:openAdm", function(searchTerm)
                 description = (function()
                     local desc = {}
                     if s.weight and s.weight ~= '' and tonumber(s.weight) and tonumber(s.weight) > 0 then
-                        table.insert(desc, 'Peso: ' .. math.floor(tonumber(s.weight)/1000) .. 'kg')
+                        table.insert(desc, locale("desc.peso") .. math.floor(tonumber(s.weight)/1000) .. locale("desc.kg"))
                     end
                     if s.slotSize then
-                        table.insert(desc, 'Slots: ' .. s.slotSize)
+                        table.insert(desc, locale("desc.slots") .. s.slotSize)
                     end
                     if s.citizenID and s.citizenID ~= '' then
-                        table.insert(desc, 'CID: ' .. s.citizenID)
+                        table.insert(desc, locale("desc.cid") .. s.citizenID)
                     end
                     if s.job and s.job ~= '' then
-                        table.insert(desc, 'Job: ' .. s.job)
+                        table.insert(desc, locale("desc.job") .. s.job)
                     end
                     if s.gang and s.gang ~= '' then
-                        table.insert(desc, 'Gang: ' .. s.gang)
+                        table.insert(desc, locale("desc.gang") .. s.gang)
                     end
                     if s.rank and s.rank ~= '' and tonumber(s.rank) and tonumber(s.rank) > 0 then
-                        table.insert(desc, 'Rank: ' .. s.rank)
+                        table.insert(desc, locale("desc.rank") .. s.rank)
                     end
                     if s.item and s.item ~= '' and s.item ~= 1 then
-                        table.insert(desc, 'Item: ' .. s.item)
+                        table.insert(desc, locale("desc.item") .. s.item)
                     end
                     if s.password and s.password ~= '' and tonumber(s.password) and tonumber(s.password) > 0 then
-                        table.insert(desc, 'Senha: Sim')
+                        table.insert(desc, locale("desc.senha"))
                     end
                     return table.concat(desc, ' | ')
                 end)(),
@@ -79,136 +79,72 @@ RegisterNetEvent("mri_Qstashes:openAdm", function(searchTerm)
                     local stash = s
                     lib.registerContext({
                         id = 'stash_manage_' .. stash.id,
-                        title = stash.name .. ' - Gerenciar',
+                        title = stash.name .. ' - ' .. locale("submenu.edit_desc"),
                         options = {
                             {
-                                title = 'Editar',
+                                title = locale("submenu.edit"),
                                 icon = 'edit',
-                                description = 'Editar este baú',
+                                description = locale("submenu.edit_desc"),
                                 onSelect = function()
-                                    local input = lib.inputDialog(locale("createmenu.title"), {{
-                                        type = 'input',
-                                        label = locale("createmenu.input1"),
-                                        description = locale("createmenu.description1"),
-                                        default = stash.name or ""
-                                    }, {
-                                        type = 'input',
-                                        label = locale("createmenu.input2"),
-                                        description = locale("createmenu.description2"),
-                                        default = stash.job or ""
-                                    }, {
-                                        type = 'input',
-                                        label = locale("createmenu.input3"),
-                                        description = locale("createmenu.description3"),
-                                        default = stash.gang or ""
-                                    }, {
-                                        type = 'input',
-                                        label = locale("createmenu.input4"),
-                                        description = locale("createmenu.description4"),
-                                        default = stash.rank or ""
-                                    }, {
-                                        type = 'input',
-                                        label = locale("createmenu.input5"),
-                                        description = locale("createmenu.description5"),
-                                        default = stash.item or ""
-                                    }, {
-                                        type = 'number',
-                                        label = locale("createmenu.input6"),
-                                        description = locale("createmenu.description6"),
-                                        default = stash.slotSize or Config.Defaultslot
-                                    }, {
-                                        type = 'number',
-                                        label = locale("createmenu.input7"),
-                                        description = locale("createmenu.description7"),
-                                        default = (stash.weight and math.floor(tonumber(stash.weight)/1000)) or Config.Defaultweight
-                                    }, {
-                                        type = 'number',
-                                        label = locale("createmenu.input8"),
-                                        description = locale("createmenu.description8"),
-                                        default = stash.password or 0
-                                    }, {
-                                        type = 'input',
-                                        label = locale("createmenu.input9"),
-                                        description = locale("createmenu.description9"),
-                                        default = stash.citizenID or ""
-                                    }, {
-                                        type = 'input',
-                                        label = locale("createmenu.input10"),
-                                        description = locale("createmenu.description10"),
-                                        default = stash.targetlabel or Config.DefaultMessage
-                                    }, {
-                                        type = 'input',
-                                        label = locale("createmenu.input11"),
-                                        description = locale("createmenu.description11"),
-                                        default = stash.webhookURL or ""
-                                    }})
+                                    local input = lib.inputDialog(locale("createmenu.title"), {
+                                        { type = 'input', label = locale("createmenu.input1"), description = locale("createmenu.description1"), default = stash.name or "" },
+                                        { type = 'input', label = locale("createmenu.input2"), description = locale("createmenu.description2"), default = stash.job or "" },
+                                        { type = 'input', label = locale("createmenu.input3"), description = locale("createmenu.description3"), default = stash.gang or "" },
+                                        { type = 'input', label = locale("createmenu.input4"), description = locale("createmenu.description4"), default = stash.rank or "" },
+                                        { type = 'input', label = locale("createmenu.input5"), description = locale("createmenu.description5"), default = stash.item or "" },
+                                        { type = 'number', label = locale("createmenu.input6"), description = locale("createmenu.description6"), default = stash.slotSize or Config.Defaultslot },
+                                        { type = 'number', label = locale("createmenu.input7"), description = locale("createmenu.description7"), default = (stash.weight and math.floor(tonumber(stash.weight)/1000)) or Config.Defaultweight },
+                                        { type = 'number', label = locale("createmenu.input8"), description = locale("createmenu.description8"), default = stash.password or 0 },
+                                        { type = 'input', label = locale("createmenu.input9"), description = locale("createmenu.description9"), default = stash.citizenID or "" },
+                                        { type = 'input', label = locale("createmenu.input10"), description = locale("createmenu.description10"), default = stash.targetlabel or Config.DefaultMessage },
+                                        { type = 'input', label = locale("createmenu.input11"), description = locale("createmenu.description11"), default = stash.webhookURL or "" }
+                                    })
                                     if input and input[1] ~= "" then
                                         if input[6] == nil then input[6] = Config.Defaultslot end
                                         if input[7] == nil then input[7] = Config.Defaultweight * 1000 else input[7] = input[7] * 1000 end
                                         TriggerServerEvent("updateStashesData", stash.id, input)
-                                        lib.notify({
-                                            type = 'success',
-                                            description = locale("createmenu.notify_sucess")
-                                        })
+                                        lib.notify({ type = 'success', description = locale("createmenu.notify_sucess") })
                                     else
-                                        lib.notify({
-                                            type = 'error',
-                                            description = locale("createmenu.notify_error")
-                                        })
+                                        lib.notify({ type = 'error', description = locale("createmenu.notify_error") })
                                     end
                                 end
                             },
                             {
-                                title = 'Mover',
+                                title = locale("submenu.move"),
                                 icon = 'fa-solid fa-arrows-up-down-left-right',
-                                description = 'Alterar a localização deste baú',
+                                description = locale("submenu.move_desc"),
                                 onSelect = function()
                                     local newLoc = StartRay()
                                     if newLoc then
                                         TriggerServerEvent('updateStashLocation', stash.id, newLoc)
-                                        lib.notify({
-                                            type = 'success',
-                                            description = 'Localização do baú atualizada!'
-                                        })
+                                        lib.notify({ type = 'success', description = locale("submenu.move_success") })
                                     else
-                                        lib.notify({
-                                            type = 'error',
-                                            description = 'Ação cancelada.'
-                                        })
+                                        lib.notify({ type = 'error', description = locale("submenu.move_cancel") })
                                     end
                                 end
                             },
                             {
-                                title = 'Teleportar',
+                                title = locale("submenu.teleport"),
                                 icon = 'fa-solid fa-location-dot',
-                                description = 'Teleportar para este baú',
+                                description = locale("submenu.teleport_desc"),
                                 onSelect = function()
                                     SetEntityCoords(cache.ped, stash.loc.x, stash.loc.y, stash.loc.z)
-                                    lib.notify({
-                                        title = 'Teleportado',
-                                        description = 'Você foi teleportado para o baú ' .. stash.name,
-                                        type = 'success'
-                                    })
+                                    lib.notify({ type = 'success', description = locale("submenu.teleport_success") .. stash.name })
                                 end
                             },
                             {
-                                title = 'Excluir',
+                                title = locale("submenu.delete"),
                                 icon = 'trash',
-                                description = 'Excluir este baú',
+                                description = locale("submenu.delete_desc"),
                                 onSelect = function()
-                                    local deleted = TriggerServerEvent("deleteStashesData", stash.id)
-                                    if not deleted then
-                                        lib.notify({
-                                            title = locale("openadm.title"),
-                                            description = locale("openadm.options3_description3"),
-                                            type = 'success'
-                                        })
-                                    else
-                                        lib.notify({
-                                            title = locale("openadm.title"),
-                                            description = locale("openadm.options3_description4"),
-                                            type = 'error'
-                                        })
+                                    local input = lib.inputDialog(locale("submenu.delete_confirm"), {{type = 'confirm', label = locale("submenu.delete")}})
+                                    if input and input[1] then
+                                        local deleted = TriggerServerEvent("deleteStashesData", stash.id)
+                                        if not deleted then
+                                            lib.notify({ type = 'success', description = locale("openadm.options3_description3") })
+                                        else
+                                            lib.notify({ type = 'error', description = locale("openadm.options3_description4") })
+                                        end
                                     end
                                 end
                             }
@@ -339,9 +275,11 @@ function StartRay()
     local run = true
     while run do
         local hit, entity, endCoords = lib.raycast.cam(1 | 16)
-        lib.showTextUI(locale("raycast.title") .. '  \n X:  ' .. endCoords.x .. ',  \n Y:  ' .. endCoords.y ..
-                           ',  \n Z:  ' .. endCoords.z .. '  \n ' .. locale("raycast.e_button") .. '  \n  ' ..
-                           locale("raycast.del_button"))
+        local coordsText = string.format(
+            locale("raycast.title") .. '  \n X:  %.2f,  \n Y:  %.2f,  \n Z:  %.2f  \n %s  \n  %s',
+            endCoords.x, endCoords.y, endCoords.z, locale("raycast.e_button"), locale("raycast.del_button")
+        )
+        lib.showTextUI(coordsText, {icon = 'fa-solid fa-location-dot'})
         DrawMarker(28, endCoords.x, endCoords.y, endCoords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.2, 255, 42, 24,
             100, false, false, 0, true, false, false, false)
         if IsControlJustReleased(0, 38) then
@@ -349,7 +287,8 @@ function StartRay()
             run = false
             return endCoords
         end
-        if IsControlJustReleased(0, 178) then
+        -- BACKSPACE = 194
+        if IsControlJustReleased(0, 194) then
             lib.hideTextUI()
             run = false
             return nil
@@ -359,7 +298,7 @@ end
 
 RegisterNetEvent('mri_Qstashes:client:doray', function()
     if not lib.callback.await('mri_Qstashes:isAdmin', false) then
-        lib.notify({ type = 'error', description = 'Acesso negado: apenas administradores.' })
+        lib.notify({ type = 'error', description = locale("error.admin_only") })
         return
     end
     local stashmake = StartRay()

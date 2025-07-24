@@ -27,7 +27,7 @@
     "raycast": {
         "title": "Coordenadas do Baú:",
         "e_button": "[E] para SALVAR",
-        "del_button": "[DEL] para CANCELAR"
+        "del_button": "[BACKSPACE] para CANCELAR"
     },
     "createmenu": {
         "title": "Criar Baú",
@@ -58,5 +58,41 @@
     },
     "command": {
         "help": "Crie um novo baú [apenas admin]"
+    },
+    "menu": {
+        "search_title": "🔍 Buscar baú...",
+        "search_description": "Filtrar baús por nome, job, gang, citizenID, etc.",
+        "search_input_label": "Digite o termo de busca",
+        "search_input_desc": "Pode ser nome, job, gang, citizenID, etc.",
+        "create_title": "Criar novo baú",
+        "create_description": "Clique para criar um novo baú"
+    },
+    "desc": {
+        "peso": "Peso: ",
+        "kg": "kg",
+        "slots": "Slots: ",
+        "cid": "CID: ",
+        "job": "Job: ",
+        "gang": "Gang: ",
+        "rank": "Cargo: ",
+        "item": "Item: ",
+        "senha": "Senha: Sim"
+    },
+    "submenu": {
+        "edit": "Editar",
+        "edit_desc": "Editar este baú",
+        "move": "Mover",
+        "move_desc": "Alterar a localização deste baú",
+        "move_success": "Localização do baú atualizada!",
+        "move_cancel": "Ação cancelada.",
+        "teleport": "Teleportar",
+        "teleport_desc": "Teleportar para este baú",
+        "teleport_success": "Você foi teleportado para o baú ",
+        "delete": "Excluir",
+        "delete_desc": "Excluir este baú",
+        "delete_confirm": "Tem certeza que deseja excluir este baú?"
+    },
+    "error": {
+        "admin_only": "Acesso negado: apenas administradores."
     }
 }

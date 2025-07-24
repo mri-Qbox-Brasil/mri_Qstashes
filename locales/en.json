@@ -27,7 +27,7 @@
     "raycast": {
         "title": "Stash Coordinates:",
         "e_button": "[E] to SAVE",
-        "del_button": "[DEL] to CANCEL"
+        "del_button": "[BACKSPACE] to CANCEL"
     },
     "createmenu": {
         "title": "Create Stash",
@@ -58,5 +58,41 @@
     },
     "command": {
         "help": "Create a new stash [admin only]"
+    },
+    "menu": {
+        "search_title": "�� Search stash...",
+        "search_description": "Filter stashes by name, job, gang, citizenID, etc.",
+        "search_input_label": "Enter search term",
+        "search_input_desc": "Can be name, job, gang, citizenID, etc.",
+        "create_title": "Create new stash",
+        "create_description": "Click to create a new stash"
+    },
+    "desc": {
+        "peso": "Weight: ",
+        "kg": "kg",
+        "slots": "Slots: ",
+        "cid": "CID: ",
+        "job": "Job: ",
+        "gang": "Gang: ",
+        "rank": "Rank: ",
+        "item": "Item: ",
+        "senha": "Password: Yes"
+    },
+    "submenu": {
+        "edit": "Edit",
+        "edit_desc": "Edit this stash",
+        "move": "Move",
+        "move_desc": "Change this stash location",
+        "move_success": "Stash location updated!",
+        "move_cancel": "Action canceled.",
+        "teleport": "Teleport",
+        "teleport_desc": "Teleport to this stash",
+        "teleport_success": "You have been teleported to stash ",
+        "delete": "Delete",
+        "delete_desc": "Delete this stash",
+        "delete_confirm": "Are you sure you want to delete this stash?"
+    },
+    "error": {
+        "admin_only": "Access denied: admins only."
     }
 }
