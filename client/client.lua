@@ -159,14 +159,17 @@ RegisterNetEvent("mri_Qstashes:openAdm", function(searchTerm)
                                 icon = 'trash',
                                 description = locale("submenu.delete_desc"),
                                 onSelect = function()
-                                    local input = lib.inputDialog(locale("submenu.delete_confirm"), {{type = 'confirm', label = locale("submenu.delete")}})
-                                    if input and input[1] then
-                                        local deleted = TriggerServerEvent("deleteStashesData", stash.id)
-                                        if not deleted then
-                                            lib.notify({ type = 'success', description = locale("openadm.options3_description3") })
-                                        else
-                                            lib.notify({ type = 'error', description = locale("openadm.options3_description4") })
-                                        end
+                                    local result = lib.alertDialog({
+                                        header = locale("submenu.delete_confirm"),
+                                        content = '',
+                                        centered = true,
+                                        cancel = true,
+                                        size = 'sm',
+                                        labels = { confirm = locale("submenu.delete") }
+                                    })
+                                    if result == 'confirm' then
+                                        TriggerServerEvent("deleteStashesData", stash.id)
+                                        lib.notify({ type = 'success', description = locale("openadm.options3_description3") })
                                     end
                                 end
                             }
@@ -342,14 +345,17 @@ RegisterNetEvent('mri_Qstashes:start', function(stashesTable)
                                 icon = 'trash',
                                 description = locale("submenu.delete_desc"),
                                 onSelect = function()
-                                    local input = lib.inputDialog(locale("submenu.delete_confirm"), {{type = 'confirm', label = locale("submenu.delete")}})
-                                    if input and input[1] then
-                                        local deleted = TriggerServerEvent("deleteStashesData", stash.id)
-                                        if not deleted then
-                                            lib.notify({ type = 'success', description = locale("openadm.options3_description3") })
-                                        else
-                                            lib.notify({ type = 'error', description = locale("openadm.options3_description4") })
-                                        end
+                                    local result = lib.alertDialog({
+                                        header = locale("submenu.delete_confirm"),
+                                        content = '',
+                                        centered = true,
+                                        cancel = true,
+                                        size = 'sm',
+                                        labels = { confirm = locale("submenu.delete") }
+                                    })
+                                    if result == 'confirm' then
+                                        TriggerServerEvent("deleteStashesData", stash.id)
+                                        lib.notify({ type = 'success', description = locale("openadm.options3_description3") })
                                     end
                                 end
                             }
