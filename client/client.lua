@@ -216,11 +216,10 @@ RegisterNetEvent('mri_Qstashes:start', function(stashesTable)
                 onSelect = function()
                     if v.password ~= 0 then
                         local input = lib.inputDialog(locale("target.input"), {{
-                            type = 'number',
+                            type = 'input',
                             label = locale("target.label"),
                             description = locale("target.description"),
-                            min = 1,
-                            max = 99999,
+                            password = true,
                             required = true
                         }})
                         if input == nil then
