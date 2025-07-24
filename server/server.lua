@@ -1,6 +1,3 @@
----------------------------------------------------------------
-------------- data Set
----------------------------------------------------------------
 local stashesTable = {}
 RegisterNetEvent("insertStashesData", function(input, loc)
     stashesTable[#stashesTable + 1] = {
@@ -32,9 +29,25 @@ RegisterNetEvent("deleteStashesData", function(id)
     TriggerClientEvent("mri_Qstashes:delete", -1, stashesTable)
 end)
 
----------------------------------------------------------------
-------------- core Functions
----------------------------------------------------------------
+RegisterNetEvent("updateStashesData", function(id, input)
+    for i = 1, #stashesTable do
+        if stashesTable[i].id == id then
+            stashesTable[i].name = input[1] or stashesTable[i].name
+            stashesTable[i].job = input[2] or stashesTable[i].job
+            stashesTable[i].gang = input[3] or stashesTable[i].gang
+            stashesTable[i].rank = input[4] or stashesTable[i].rank
+            stashesTable[i].item = input[5] or stashesTable[i].item
+            stashesTable[i].slotSize = input[6] or stashesTable[i].slotSize
+            stashesTable[i].weight = input[7] or stashesTable[i].weight
+            stashesTable[i].password = input[8] or stashesTable[i].password
+            stashesTable[i].citizenID = input[9] or stashesTable[i].citizenID
+            stashesTable[i].targetlabel = input[10] or stashesTable[i].targetlabel
+            stashesTable[i].webhookURL = input[11] or stashesTable[i].webhookURL
+            break
+        end
+    end
+    SaveStashesData()
+end)
 
 function SaveStashesData()
     TriggerClientEvent("mri_Qstashes:delete", -1, stashesTable)
@@ -82,9 +95,6 @@ function RegisterStashData()
     end
 end
 
----------------------------------------------------------------
-------------- core Events
----------------------------------------------------------------
 lib.callback.register('stashesGetAll', function()
     return stashesTable
 end)
@@ -114,9 +124,6 @@ RegisterNetEvent("mri_Qstashes:server:Unload", function()
     TriggerClientEvent("mri_Qstashes:delete", src, stashesTable)
 end)
 
----------------------------------------------------------------
-------------- addCommand
----------------------------------------------------------------
 lib.addCommand(Config.Command, {
     help = locale("command.help"),
     restricted = 'group.admin'
@@ -124,10 +131,6 @@ lib.addCommand(Config.Command, {
     local src = source
     TriggerClientEvent('mri_Qstashes:openAdm', src)
 end)
-
----------------------------------------------------------------
-------------- Webhook Discord
----------------------------------------------------------------
 
 local function sendWebhook(webhook, data)
     if webhook == nil then
@@ -145,7 +148,6 @@ end
 
 function WebhookPlayer(payload, webhookURL, inventory)
     local webhookURL = webhookURL
-    local description = ""
     if not webhookURL then
         return
     end
@@ -153,21 +155,36 @@ function WebhookPlayer(payload, webhookURL, inventory)
     local playerdiscord = GetPlayerIdentifierByType(payload.source, 'discord'):match("%d+")
     local playerIdentifier = GetPlayerIdentifiers(payload.source)[1]
     local playerCoords = GetEntityCoords(GetPlayerPed(payload.source))
-
+    local color = 0x00ff00
+    local actionTitle = "Item depositado no baú"
     if payload.fromType == "player" and payload.toType == "stash" then
-        description =
-            ('Cidadão: **%s** \nDiscordID: <@%s> \nID: **%s** \nColocou Item: **%s** \nQuantidade: **%s** \nMetadata: **%s** \nNome do Bau: **%s** \nCoordenadas: ```%s```')
+        color = 0x00ff00
+        actionTitle = "Item depositado no baú"
     elseif payload.fromType == "stash" and payload.toType == "player" then
-        description =
-            ('Cidadão: **%s** \nDiscordID: <@%s> \nID: **%s** \nPegou Item: **%s** \nQuantidade: **%s** \nMetadata: **%s** \nNome do Bau: **%s** \nCoordenadas: ```%s```')
+        color = 0xff0000
+        actionTitle = "Item retirado do baú"
     end
-
-    sendWebhook(webhookURL, {{
-        title = 'Bau',
-        description = description:format(playerName, playerdiscord, payload.source, payload.fromSlot.name,
-            payload.fromSlot.count, json.encode(payload.fromSlot.metadata), inventory,
-            ('%s, %s, %s'):format(playerCoords.x, playerCoords.y, playerCoords.z)),
-        color = Config.Color
-    }})
+    local embed = {
+        title = actionTitle .. (inventory and (" - " .. inventory) or ""),
+        author = {
+            name = playerName .. " (" .. (playerdiscord or "N/A") .. ")",
+            icon_url = "https://cdn.discordapp.com/embed/avatars/0.png"
+        },
+        fields = {
+            { name = "Usuário", value = "<@" .. (playerdiscord or "0") .. ">", inline = true },
+            { name = "Item", value = payload.fromSlot and payload.fromSlot.name or "Desconhecido", inline = true },
+            { name = "Quantidade", value = tostring(payload.fromSlot and payload.fromSlot.count or "?"), inline = true },
+            { name = "Metadata", value = payload.fromSlot and json.encode(payload.fromSlot.metadata) or "{}", inline = false },
+            { name = "Baú", value = inventory or "Desconhecido", inline = true },
+            { name = "CitizenID", value = playerIdentifier or "N/A", inline = true },
+            { name = "Coordenadas", value = ('%s, %s, %s'):format(playerCoords.x, playerCoords.y, playerCoords.z), inline = false }
+        },
+        footer = {
+            text = "ID: " .. payload.source .. " | " .. os.date("%d/%m/%Y %H:%M:%S")
+        },
+        color = color,
+        timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
+    }
+    sendWebhook(webhookURL, {embed})
 end
 
