@@ -116,6 +116,26 @@ RegisterNetEvent("mri_Qstashes:openAdm", function()
                             end
                         },
                         {
+                            title = 'Mover',
+                            icon = 'fa-solid fa-arrows-up-down-left-right',
+                            description = 'Alterar a localização deste baú',
+                            onSelect = function()
+                                local newLoc = StartRay()
+                                if newLoc then
+                                    TriggerServerEvent('updateStashLocation', stash.id, newLoc)
+                                    lib.notify({
+                                        type = 'success',
+                                        description = 'Localização do baú atualizada!'
+                                    })
+                                else
+                                    lib.notify({
+                                        type = 'error',
+                                        description = 'Ação cancelada.'
+                                    })
+                                end
+                            end
+                        },
+                        {
                             title = 'Excluir',
                             icon = 'trash',
                             description = 'Excluir este baú',

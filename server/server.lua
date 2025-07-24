@@ -70,6 +70,18 @@ RegisterNetEvent("updateStashesData", function(id, input)
     SaveStashesData()
 end)
 
+RegisterNetEvent("updateStashLocation", function(id, newLoc)
+    local src = source
+    if not isAdmin(src) then return end
+    for i = 1, #stashesTable do
+        if stashesTable[i].id == id then
+            stashesTable[i].loc = newLoc
+            break
+        end
+    end
+    SaveStashesData()
+end)
+
 function SaveStashesData()
     TriggerClientEvent("mri_Qstashes:delete", -1, stashesTable)
     local jsonData = json.encode(stashesTable)
