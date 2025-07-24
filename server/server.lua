@@ -1,5 +1,22 @@
 local stashesTable = {}
+
+function isAdmin(src)
+    if not Config or not Config.AdminPerms then return false end
+    for _, perm in ipairs(Config.AdminPerms) do
+        if IsPlayerAceAllowed(src, perm) then
+            return true
+        end
+    end
+    return false
+end
+
+lib.callback.register('mri_Qstashes:isAdmin', function(src)
+    return isAdmin(src)
+end)
+
 RegisterNetEvent("insertStashesData", function(input, loc)
+    local src = source
+    if not isAdmin(src) then return end
     stashesTable[#stashesTable + 1] = {
         id = math.random(100000, 999999),
         name = input[1] or nil,
@@ -19,6 +36,8 @@ RegisterNetEvent("insertStashesData", function(input, loc)
 end)
 
 RegisterNetEvent("deleteStashesData", function(id)
+    local src = source
+    if not isAdmin(src) then return end
     for i = #stashesTable, 1, -1 do
         if stashesTable[i].id == id then
             table.remove(stashesTable, i)
@@ -30,6 +49,8 @@ RegisterNetEvent("deleteStashesData", function(id)
 end)
 
 RegisterNetEvent("updateStashesData", function(id, input)
+    local src = source
+    if not isAdmin(src) then return end
     for i = 1, #stashesTable do
         if stashesTable[i].id == id then
             stashesTable[i].name = input[1] or stashesTable[i].name

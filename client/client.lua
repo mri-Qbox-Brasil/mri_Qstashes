@@ -1,4 +1,8 @@
 RegisterNetEvent("mri_Qstashes:openAdm", function()
+    if not lib.callback.await('mri_Qstashes:isAdmin', false) then
+        lib.notify({ type = 'error', description = 'Acesso negado: apenas administradores.' })
+        return
+    end
     local stashes = lib.callback.await('stashesGetAll', false)
     local options = {
         {
@@ -277,6 +281,10 @@ function StartRay()
 end
 
 RegisterNetEvent('mri_Qstashes:client:doray', function()
+    if not lib.callback.await('mri_Qstashes:isAdmin', false) then
+        lib.notify({ type = 'error', description = 'Acesso negado: apenas administradores.' })
+        return
+    end
     local stashmake = StartRay()
     if stashmake ~= nil then
         local input = lib.inputDialog(locale("createmenu.title"), {{
