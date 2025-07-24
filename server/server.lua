@@ -28,7 +28,7 @@ RegisterNetEvent("insertStashesData", function(input, loc)
         weight = input[7],
         password = input[8] or nil,
         citizenID = input[9] or nil,
-        targetlabel = input[10] or nil,
+        targetlabel = input[10] or locale("createmenu.default10"),
         webhookURL = input[11] or nil,
         loc = loc or nil
     }

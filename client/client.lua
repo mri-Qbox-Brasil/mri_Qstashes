@@ -461,7 +461,8 @@ RegisterNetEvent('mri_Qstashes:client:doray', function()
         }, {
             type = 'input',
             label = locale("createmenu.input10"),
-            description = locale("createmenu.")
+            description = locale("createmenu.description10"),
+            default = locale("createmenu.default10")
         }, {
             type = 'input',
             label = locale("createmenu.input11"),
@@ -481,7 +482,7 @@ RegisterNetEvent('mri_Qstashes:client:doray', function()
                 type = 'success',
                 description = locale("createmenu.notify_sucess")
             })
-            
+
         else
             lib.notify({
                 type = 'error',
