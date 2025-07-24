@@ -79,7 +79,7 @@
         "senha": "Password: Yes"
     },
     "submenu": {
-        "edit": "Edit",
+        "edit": "Edit (admin only)",
         "edit_desc": "Edit this stash",
         "move": "Move",
         "move_desc": "Change this stash location",

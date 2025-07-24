@@ -79,7 +79,7 @@
         "senha": "Senha: Sim"
     },
     "submenu": {
-        "edit": "Editar",
+        "edit": "Editar (apenas admin)",
         "edit_desc": "Editar este baú",
         "move": "Mover",
         "move_desc": "Alterar a localização deste baú",

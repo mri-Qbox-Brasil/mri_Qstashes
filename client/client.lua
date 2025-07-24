@@ -1,5 +1,27 @@
+local isAdminCache = false
+
+local function updateAdminStatus()
+    isAdminCache = lib.callback.await('mri_Qstashes:isAdmin', false)
+end
+
+-- Atualiza ao iniciar o script
+CreateThread(function()
+    updateAdminStatus()
+end)
+
+-- Atualiza ao logar
+RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
+    updateAdminStatus()
+    TriggerServerEvent("mri_Qstashes:server:Load")
+end)
+
+RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
+    isAdminCache = false
+    TriggerServerEvent("mri_Qstashes:server:Unload")
+end)
+
 RegisterNetEvent("mri_Qstashes:openAdm", function(searchTerm)
-    if not lib.callback.await('mri_Qstashes:isAdmin', false) then
+    if not isAdminCache then
         lib.notify({ type = 'error', description = locale("error.admin_only") })
         return
     end
@@ -251,6 +273,127 @@ RegisterNetEvent('mri_Qstashes:start', function(stashesTable)
                         end
                     end
                 end
+            },
+            {
+                name = 'editstash',
+                icon = 'fa-solid fa-pen-to-square',
+                label = locale("submenu.edit"),
+                distance = 4.5,
+                onSelect = function()
+                    -- Abrir diretamente o submenu do baú
+                    local stash = v
+                    lib.registerContext({
+                        id = 'stash_manage_' .. stash.id,
+                        title = stash.name .. ' - ' .. locale("submenu.edit_desc"),
+                        options = {
+                            {
+                                title = locale("submenu.edit"),
+                                icon = 'edit',
+                                description = locale("submenu.edit_desc"),
+                                onSelect = function()
+                                    local input = lib.inputDialog(locale("createmenu.title"), {
+                                        { type = 'input', label = locale("createmenu.input1"), description = locale("createmenu.description1"), default = stash.name or "" },
+                                        { type = 'input', label = locale("createmenu.input2"), description = locale("createmenu.description2"), default = stash.job or "" },
+                                        { type = 'input', label = locale("createmenu.input3"), description = locale("createmenu.description3"), default = stash.gang or "" },
+                                        { type = 'input', label = locale("createmenu.input4"), description = locale("createmenu.description4"), default = stash.rank or "" },
+                                        { type = 'input', label = locale("createmenu.input5"), description = locale("createmenu.description5"), default = stash.item or "" },
+                                        { type = 'number', label = locale("createmenu.input6"), description = locale("createmenu.description6"), default = stash.slotSize or Config.Defaultslot },
+                                        { type = 'number', label = locale("createmenu.input7"), description = locale("createmenu.description7"), default = (stash.weight and math.floor(tonumber(stash.weight)/1000)) or Config.Defaultweight },
+                                        { type = 'number', label = locale("createmenu.input8"), description = locale("createmenu.description8"), default = stash.password or 0 },
+                                        { type = 'input', label = locale("createmenu.input9"), description = locale("createmenu.description9"), default = stash.citizenID or "" },
+                                        { type = 'input', label = locale("createmenu.input10"), description = locale("createmenu.description10"), default = stash.targetlabel or Config.DefaultMessage },
+                                        { type = 'input', label = locale("createmenu.input11"), description = locale("createmenu.description11"), default = stash.webhookURL or "" }
+                                    })
+                                    if input and input[1] ~= "" then
+                                        if input[6] == nil then input[6] = Config.Defaultslot end
+                                        if input[7] == nil then input[7] = Config.Defaultweight * 1000 else input[7] = input[7] * 1000 end
+                                        TriggerServerEvent("updateStashesData", stash.id, input)
+                                        lib.notify({ type = 'success', description = locale("createmenu.notify_sucess") })
+                                    else
+                                        lib.notify({ type = 'error', description = locale("createmenu.notify_error") })
+                                    end
+                                end
+                            },
+                            {
+                                title = locale("submenu.move"),
+                                icon = 'fa-solid fa-arrows-up-down-left-right',
+                                description = locale("submenu.move_desc"),
+                                onSelect = function()
+                                    local newLoc = StartRay()
+                                    if newLoc then
+                                        TriggerServerEvent('updateStashLocation', stash.id, newLoc)
+                                        lib.notify({ type = 'success', description = locale("submenu.move_success") })
+                                    else
+                                        lib.notify({ type = 'error', description = locale("submenu.move_cancel") })
+                                    end
+                                end
+                            },
+                            {
+                                title = locale("submenu.teleport"),
+                                icon = 'fa-solid fa-location-dot',
+                                description = locale("submenu.teleport_desc"),
+                                onSelect = function()
+                                    SetEntityCoords(cache.ped, stash.loc.x, stash.loc.y, stash.loc.z)
+                                    lib.notify({ type = 'success', description = locale("submenu.teleport_success") .. stash.name })
+                                end
+                            },
+                            {
+                                title = locale("submenu.delete"),
+                                icon = 'trash',
+                                description = locale("submenu.delete_desc"),
+                                onSelect = function()
+                                    local input = lib.inputDialog(locale("submenu.delete_confirm"), {{type = 'confirm', label = locale("submenu.delete")}})
+                                    if input and input[1] then
+                                        local deleted = TriggerServerEvent("deleteStashesData", stash.id)
+                                        if not deleted then
+                                            lib.notify({ type = 'success', description = locale("openadm.options3_description3") })
+                                        else
+                                            lib.notify({ type = 'error', description = locale("openadm.options3_description4") })
+                                        end
+                                    end
+                                end
+                            },
+                            {
+                                title = 'Aumentar capacidade',
+                                icon = 'fa-solid fa-arrow-up',
+                                description = 'Pagar ' .. (v.upgradePrice or 0) .. ' para aumentar em ' .. (v.upgradeAmount or 0) .. 'kg',
+                                onSelect = function()
+                                    local price = v.upgradePrice or 0
+                                    local amount = v.upgradeAmount or 0
+                                    if price <= 0 or amount <= 0 then
+                                        lib.notify({ type = 'error', description = 'Este baú não pode ser melhorado.' })
+                                        return
+                                    end
+                                    local input = lib.inputDialog('Aumentar capacidade', {{
+                                        type = 'confirm',
+                                        label = 'Pagar ' .. price .. ' para aumentar em ' .. amount .. 'kg'
+                                    }})
+                                    if input and input[1] then
+                                        TriggerServerEvent('mri_Qstashes:upgradeStash', v.id)
+                                    end
+                                end,
+                                canInteract = function()
+                                    -- Só aparece se o player pode usar o baú normalmente
+                                    if QBX.PlayerData.job.name == v.job or v.job == "" then
+                                        if QBX.PlayerData.job.grade.level >= v.rank or v.job == "" then
+                                            if QBX.PlayerData.gang.name == v.gang and QBX.PlayerData.gang.grade.level >= v.rank or v.gang == "" then
+                                                if v.item == 1 or QBX.HasItem(v.item) then
+                                                    if QBX.PlayerData.citizenid == v.cid or v.cid == 2 then
+                                                        return true
+                                                    end
+                                                end
+                                            end
+                                        end
+                                    end
+                                end
+                            }
+                        }
+                    })
+                    lib.showContext('stash_manage_' .. stash.id)
+                end,
+                canInteract = function()
+                    return isAdminCache
+                end
             }}
         })
     end
@@ -296,7 +439,7 @@ function StartRay()
 end
 
 RegisterNetEvent('mri_Qstashes:client:doray', function()
-    if not lib.callback.await('mri_Qstashes:isAdmin', false) then
+    if not isAdminCache then
         lib.notify({ type = 'error', description = locale("error.admin_only") })
         return
     end
@@ -374,14 +517,6 @@ RegisterNetEvent('mri_Qstashes:client:doray', function()
             })
         end
     end
-end)
-
-RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
-    TriggerServerEvent("mri_Qstashes:server:Load")
-end)
-
-RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
-    TriggerServerEvent("mri_Qstashes:server:Unload")
 end)
 
 
