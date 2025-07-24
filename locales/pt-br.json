@@ -68,7 +68,7 @@
         "create_description": "Clique para criar um novo baú"
     },
     "desc": {
-        "peso": "Peso: ",
+        "weight": "Peso: ",
         "kg": "kg",
         "slots": "Slots: ",
         "cid": "CID: ",

@@ -68,7 +68,7 @@
         "create_description": "Click to create a new stash"
     },
     "desc": {
-        "peso": "Weight: ",
+        "weight": "Weight: ",
         "kg": "kg",
         "slots": "Slots: ",
         "cid": "CID: ",

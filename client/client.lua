@@ -50,7 +50,7 @@ RegisterNetEvent("mri_Qstashes:openAdm", function(searchTerm)
                 description = (function()
                     local desc = {}
                     if s.weight and s.weight ~= '' and tonumber(s.weight) and tonumber(s.weight) > 0 then
-                        table.insert(desc, locale("desc.peso") .. math.floor(tonumber(s.weight)/1000) .. locale("desc.kg"))
+                        table.insert(desc, locale("desc.weight") .. math.floor(tonumber(s.weight)/1000) .. locale("desc.kg"))
                     end
                     if s.slotSize then
                         table.insert(desc, locale("desc.slots") .. s.slotSize)
