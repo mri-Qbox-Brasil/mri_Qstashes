@@ -18,7 +18,34 @@ RegisterNetEvent("mri_Qstashes:openAdm", function()
         options[#options + 1] = {
             title = stashes[i].name,
             icon = 'box',
-            description = "Clique para gerenciar este baú",
+            description = (function()
+                local desc = {}
+                if stashes[i].weight and stashes[i].weight ~= '' and tonumber(stashes[i].weight) and tonumber(stashes[i].weight) > 0 then
+                    table.insert(desc, 'Peso: ' .. math.floor(tonumber(stashes[i].weight)/1000) .. 'kg')
+                end
+                if stashes[i].slotSize then
+                    table.insert(desc, 'Slots: ' .. stashes[i].slotSize)
+                end
+                if stashes[i].citizenID and stashes[i].citizenID ~= '' then
+                    table.insert(desc, 'CID: ' .. stashes[i].citizenID)
+                end
+                if stashes[i].job and stashes[i].job ~= '' then
+                    table.insert(desc, 'Job: ' .. stashes[i].job)
+                end
+                if stashes[i].gang and stashes[i].gang ~= '' then
+                    table.insert(desc, 'Gang: ' .. stashes[i].gang)
+                end
+                if stashes[i].rank and stashes[i].rank ~= '' and tonumber(stashes[i].rank) and tonumber(stashes[i].rank) > 0 then
+                    table.insert(desc, 'Rank: ' .. stashes[i].rank)
+                end
+                if stashes[i].item and stashes[i].item ~= '' and stashes[i].item ~= 1 then
+                    table.insert(desc, 'Item: ' .. stashes[i].item)
+                end
+                if stashes[i].password and stashes[i].password ~= '' and tonumber(stashes[i].password) and tonumber(stashes[i].password) > 0 then
+                    table.insert(desc, 'Senha: Sim')
+                end
+                return table.concat(desc, ' | ')
+            end)(),
             onSelect = function()
                 local stash = stashes[i]
                 lib.registerContext({
