@@ -180,14 +180,14 @@ local function sendWebhook(webhook, data)
 end
 
 function WebhookPlayer(payload, webhookURL, inventory)
-    local webhookURL = webhookURL
-    if not webhookURL then
+    if type(webhookURL) ~= "string" or webhookURL:match("^%s*$") or not webhookURL:match("^https?://") then
         return
     end
-    local playerName = GetPlayerName(payload.source)
-    local playerdiscord = GetPlayerIdentifierByType(payload.source, 'discord'):match("%d+")
-    local playerIdentifier = GetPlayerIdentifiers(payload.source)[1]
-    local playerCoords = GetEntityCoords(GetPlayerPed(payload.source))
+    local playerName = payload.source and GetPlayerName(payload.source) or "Desconhecido"
+    local playerdiscord = payload.source and GetPlayerIdentifierByType(payload.source, 'discord')
+    playerdiscord = playerdiscord and playerdiscord:match("%d+") or "N/A"
+    local playerIdentifier = payload.source and GetPlayerIdentifiers(payload.source) and GetPlayerIdentifiers(payload.source)[1] or "N/A"
+    local playerCoords = payload.source and GetPlayerPed(payload.source) and GetEntityCoords(GetPlayerPed(payload.source)) or {x = 0, y = 0, z = 0}
     local color = 0x00ff00
     local actionTitle = "Item depositado no baú"
     if payload.fromType == "player" and payload.toType == "stash" then
@@ -210,10 +210,10 @@ function WebhookPlayer(payload, webhookURL, inventory)
             { name = "Metadata", value = payload.fromSlot and json.encode(payload.fromSlot.metadata) or "{}", inline = false },
             { name = "Baú", value = inventory or "Desconhecido", inline = true },
             { name = "CitizenID", value = playerIdentifier or "N/A", inline = true },
-            { name = "Coordenadas", value = ('%s, %s, %s'):format(playerCoords.x, playerCoords.y, playerCoords.z), inline = false }
+            { name = "Coordenadas", value = (playerCoords.x and ('%s, %s, %s'):format(playerCoords.x, playerCoords.y, playerCoords.z) or "0, 0, 0"), inline = false }
         },
         footer = {
-            text = "ID: " .. payload.source .. " | " .. os.date("%d/%m/%Y %H:%M:%S")
+            text = "ID: " .. (payload.source or "N/A") .. " | " .. os.date("%d/%m/%Y %H:%M:%S")
         },
         color = color,
         timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
