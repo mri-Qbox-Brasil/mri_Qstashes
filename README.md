@@ -4,21 +4,26 @@ Sistema avançado de baús (stashes) para servidores FiveM, totalmente gerenciá
 
 ---
 
-## Funcionalidades
+## 🚀 Funcionalidades Modernizadas
 
+- **Persistência em Banco de Dados (MySQL):** Totalmente integrado ao `oxmysql`. Dados salvos de forma assíncrona, robusta e segura.
+- **🔄 Migração de Dados Automática:** Possui sistema inteligente que detecta o arquivo `data.json` antigo, migra todos os baús automaticamente para o banco de dados e cria um backup de segurança (`data.json.bak`).
+- **📋 Duplicação em Tempo Real:** Novo sistema de cópia/duplicação de baú in-game, copiando todas as permissões, itens de acesso, slots, peso e senha, restando apenas definir o novo nome e local (raycast).
+- **📌 UX Aprimorada (Persistência de Estado):** Ao interagir, salvar, editar ou cancelar qualquer ação, o menu mantém o estado do menu anterior para um fluxo de trabalho contínuo e sem interrupções.
+- **🔗 Webhook Inteligente (Sem Spam):** Otimizado para registrar apenas 1 único hook global no `ox_inventory`, evitando webhooks duplicados e melhorando a performance do servidor.
 - **Criação, edição, teleporte e exclusão de baús** diretamente pelo jogo, via menu administrativo.
 - **Permissões de administração** configuráveis via ace ou grupos customizados.
-- **Proteção total**: apenas administradores podem acessar e executar ações administrativas.
-- **Menu intuitivo**: todos os baús listados, com submenu para cada ação (editar, teleportar, excluir).
+- **Proteção total**: apenas administradores podem acessar e executar ações administrativas com validações restritas no server-side.
+- **Menu intuitivo**: todos os baús listados, com busca por texto integrada e submenu completo de edição rápida por baú.
 - **Configuração fácil** de slots, peso, senha, job, gang, rank, item necessário, citizenID, label e webhook.
 - **Integração com ox_inventory** e ox_target para interação 3D.
-- **Logs via webhook** para movimentações nos baús.
-- **Suporte a múltiplos idiomas** (en, pt-br).
+- **Logs via webhook** detalhados em embed rico com movimentações nos baús (Depósitos/Retiradas).
 
 ---
 
-## Dependências
+## 📦 Dependências
 
+- [oxmysql](https://github.com/overextended/oxmysql)
 - [ox_lib](https://github.com/overextended/ox_lib)
 - [ox_target](https://github.com/overextended/ox_target)
 - [ox_inventory](https://github.com/overextended/ox_inventory)
@@ -26,22 +31,23 @@ Sistema avançado de baús (stashes) para servidores FiveM, totalmente gerenciá
 
 ---
 
-## Instalação
+## 💾 Instalação
 
 1. Baixe e coloque a pasta `mri_Qstashes` em `resources/[mri]`.
-2. Adicione no seu `server.cfg`:
+2. O banco de dados será criado e estruturado **automaticamente** ao iniciar o servidor. Caso deseje executar manualmente, o arquivo `mri_qstashes.sql` está disponível na raiz do recurso.
+3. Adicione no seu `server.cfg`:
    ```
    ensure mri_Qstashes
    ```
-3. Dê permissão ace para os administradores no seu `server.cfg`:
+4. Dê permissão ace para os administradores no seu `server.cfg`:
    ```
    add_ace group.admin admin allow
    ```
-   Ou ajuste conforme sua configuração de permissões.
+   Ou ajuste conforme sua configuração de permissões em `shared/Config.lua`.
 
 ---
 
-## Configuração
+## ⚙️ Configuração
 
 Arquivo: `shared/Config.lua`
 ```lua
@@ -51,45 +57,45 @@ Config.Defaultslot = 50 -- Slots padrão do baú
 Config.Defaultweight = 1000 -- Peso padrão (em kg)
 Config.DefaultMessage = "Abrir baú" -- Mensagem padrão do alvo
 Config.Debug = false -- Ativa debug
-Config.AdminPerms = { "admin" } -- Permissões ace para admin (pode adicionar mais, ex: {"admin", "god"})
+Config.AdminPerms = { "group.admin", "admin" } -- Permissões ace para admin (pode adicionar mais, ex: {"admin", "god"})
 ```
 
 ---
 
-## Como usar
+## 🎮 Como usar
 
 - **Abertura do menu admin:**  
   Use o comando configurado (`/bau` por padrão) no chat. Apenas administradores podem abrir.
 - **No menu:**  
   - "Criar novo baú": permite criar um novo baú no local desejado (usando raycast).
+  - "Buscar baú...": permite filtrar baús por nome, job, gangue ou citizenID.
   - Clique em qualquer baú listado para abrir o submenu:
-    - **Editar:** altera todas as configurações do baú.
-    - **Teleportar:** leva seu personagem até o baú.
-    - **Excluir:** remove o baú do servidor.
+    - **✏️ Editar:** altera todas as configurações do baú.
+    - **📍 Mover Localização:** altera a localização do baú usando o raycast.
+    - **📋 Duplicar Baú:** clona o baú, permitindo escolher um novo nome e local mantendo as permissões.
+    - **🚀 Teleportar:** leva seu personagem até o baú.
+    - **🗑️ Excluir:** remove o baú de forma definitiva com popup de confirmação.
 - **Acesso ao baú:**  
   Os jogadores interagem normalmente via ox_target, respeitando as restrições de job, gang, item, senha, etc.
 
 ---
 
-## Localização
-
-- Arquivos de idioma em `locales/en.json` e `locales/pt-br.json`.
-- Adapte conforme necessário para seu servidor.
-
----
-
-## Segurança
+## 🔒 Segurança
 
 - Todas as ações administrativas são protegidas tanto no client quanto no server.
-- Apenas quem possui permissão definida em `Config.AdminPerms` pode criar, editar ou excluir baús.
+- Validação server-side estrita contra injeção de eventos (`isAdmin`).
+- Apenas quem possui permissão definida em `Config.AdminPerms` pode executar qualquer ação no script.
 
 ---
 
-## Créditos
+## 👥 Créditos e Contribuições
 
-- [wNpcCreator](https://github.com/WhereiamL/wNpcCreator/) (menu system)
-- [md-stashes](https://github.com/Mustachedom/md-stashes) (base)
-- [ox_doors](https://github.com/overextended/ox_doors/) (raycast system)
+- **Desenvolvedor Original:** [Murai Dev](https://github.com/mri-Qbox-Brasil)
+- **Modernização e Otimização:** **SnowDeve** (Conversão para MySQL, migração segura, duplicação in-game, persistência de estado nas telas do menu, e correção de duplicidade de webhooks).
+- **Referências de base:**
+  - [wNpcCreator](https://github.com/WhereiamL/wNpcCreator/) (sistema de menus)
+  - [md-stashes](https://github.com/Mustachedom/md-stashes) (base estrutural)
+  - [ox_doors](https://github.com/overextended/ox_doors/) (raycast system)
 
 ---
 
@@ -101,21 +107,22 @@ Advanced stash system for FiveM servers, fully manageable in-game by administrat
 
 ---
 
-## Features
+## 🚀 Modernized Features
 
-- **Create, edit, teleport and delete stashes** directly in-game via the admin menu.
-- **Configurable admin permissions** via ace or custom groups.
-- **Full protection**: only admins can access and perform administrative actions.
-- **Intuitive menu**: all stashes listed, with a submenu for each action (edit, teleport, delete, move).
-- **Easy configuration** of slots, weight, password, job, gang, rank, required item, citizenID, label and webhook.
-- **Integration with ox_inventory** and ox_target for 3D interaction.
-- **Webhook logs** for stash item movements.
-- **Multi-language support** (en, pt-br).
+- **Database Persistence (MySQL):** Fully integrated with `oxmysql` for secure and async operations.
+- **🔄 Auto Data Migration:** Automatically detects legacy `data.json` files, migrates stashes to your SQL database, and generates a security backup (`data.json.bak`).
+- **📋 Real-time Duplication:** In-game cloning of stashes with all configurations preserved (permissions, slots, weight, password). You only need to choose a new name and location!
+- **📌 Enhanced UX (State Persistence):** Navigating through actions always returns the user to the previous menu context, ensuring a smooth workflow.
+- **🔗 Smart Webhook (Zero Spam):** Registers only 1 global listener in `ox_inventory`, preventing duplicate discord webhook logs and boosting server performance.
+- **In-game Management:** Create, edit, teleport, and delete stashes in real-time.
+- **Comprehensive Permissions:** Configurable via ace groups or custom admin settings.
+- **Rich Embed Logs:** Detailed logs of deposits and withdrawals sent directly to your Discord webhook.
 
 ---
 
-## Dependencies
+## 📦 Dependencies
 
+- [oxmysql](https://github.com/overextended/oxmysql)
 - [ox_lib](https://github.com/overextended/ox_lib)
 - [ox_target](https://github.com/overextended/ox_target)
 - [ox_inventory](https://github.com/overextended/ox_inventory)
@@ -123,68 +130,7 @@ Advanced stash system for FiveM servers, fully manageable in-game by administrat
 
 ---
 
-## Installation
+## 👥 Credits and Contributions
 
-1. Download and place the `mri_Qstashes` folder in `resources/[mri]`.
-2. Add to your `server.cfg`:
-   ```
-   ensure mri_Qstashes
-   ```
-3. Give ace permission to admins in your `server.cfg`:
-   ```
-   add_ace group.admin admin allow
-   ```
-   Or adjust according to your permission system.
-
----
-
-## Configuration
-
-File: `shared/Config.lua`
-```lua
-Config = {}
-Config.Command = "bau" -- Command to open the admin menu
-Config.Defaultslot = 50 -- Default stash slots
-Config.Defaultweight = 1000 -- Default weight (in kg)
-Config.DefaultMessage = "Open stash" -- Default target message
-Config.Debug = false -- Enable debug
-Config.AdminPerms = { "admin" } -- Ace permissions for admin (can add more, e.g.: {"admin", "god"})
-```
-
----
-
-## How to use
-
-- **Open admin menu:**  
-  Use the configured command (`/bau` by default) in chat. Only admins can open.
-- **In the menu:**  
-  - "Create new stash": allows you to create a new stash at the desired location (using raycast).
-  - Click any listed stash to open the submenu:
-    - **Edit:** change all stash settings.
-    - **Move:** change the stash location.
-    - **Teleport:** teleport your character to the stash.
-    - **Delete:** remove the stash from the server.
-- **Accessing the stash:**  
-  Players interact normally via ox_target, respecting job, gang, item, password, etc. restrictions.
-
----
-
-## Localization
-
-- Language files in `locales/en.json` and `locales/pt-br.json`.
-- Adapt as needed for your server.
-
----
-
-## Security
-
-- All admin actions are protected both on client and server.
-- Only those with permission defined in `Config.AdminPerms` can create, edit or delete stashes.
-
----
-
-## Credits
-
-- [wNpcCreator](https://github.com/WhereiamL/wNpcCreator/) (menu system)
-- [md-stashes](https://github.com/Mustachedom/md-stashes) (base)
-- [ox_doors](https://github.com/overextended/ox_doors/) (raycast system)
+- **Original Developer:** [Murai Dev](https://github.com/mri-Qbox-Brasil)
+- **Modernization & Optimization:** **SnowDeve** (MySQL conversion, auto-migration, in-game cloning, UI persistent states, and webhook deduplication).

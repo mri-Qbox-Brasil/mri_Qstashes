@@ -8,6 +8,10 @@ version '1.0.1'
 
 ox_lib 'locale'
 
+dependencies {
+    'oxmysql'
+}
+
 shared_scripts {
     '@ox_lib/init.lua',
 	'@qbx_core/modules/lib.lua',
@@ -16,7 +20,8 @@ shared_scripts {
 }
 
 files {
-	'locales/*.json'
+	'locales/*.json',
+	'mri_qstashes.sql'
 }
 
 client_scripts {
@@ -24,8 +29,8 @@ client_scripts {
 }
 
 server_scripts {
+    '@oxmysql/lib/MySQL.lua',
 	'server/**.lua',
 }
 
 lua54 'yes'
-

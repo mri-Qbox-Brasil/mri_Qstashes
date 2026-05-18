@@ -1,6 +1,6 @@
 {
     "openadm": {
-        "title": "Criador de Baús",
+        "title": "Gerenciar Baús",
         "options_title": "Criar novo Baú",
         "options_description": "Cria um novo Baú",
         "options2_title": "Teleportar ao Baú",
@@ -44,7 +44,7 @@
         "input6": "Quantidade de Slots",
         "description6": "Número de slots do baú (opcional)",
         "input7": "Peso do baú",
-        "description7": "O peso inicial do baú (opcional)",
+        "description7": "O peso inicial do baú em Kg (opcional)",
         "input8": "Senha",
         "description8": "Digite uma senha para abrir o baú (opcional)",
         "input9": "ID do Cidadão",
@@ -58,7 +58,7 @@
         "notify_error": "Criação de baú cancelada!"
     },
     "command": {
-        "help": "Crie um novo baú [apenas admin]"
+        "help": "Gerenciar baús [apenas admin]"
     },
     "menu": {
         "search_title": "🔍 Buscar baú...",
@@ -80,18 +80,26 @@
         "senha": "Senha: Sim"
     },
     "submenu": {
-        "edit": "Editar (apenas admin)",
-        "edit_desc": "Editar este baú",
-        "move": "Mover",
-        "move_desc": "Alterar a localização deste baú",
-        "move_success": "Localização do baú atualizada!",
+        "edit": "✏️ Editar",
+        "edit_desc": "Editar todos os campos deste baú",
+        "move": "📍 Mover Localização",
+        "move_desc": "Alterar a localização deste baú no mapa",
+        "move_success": "Localização do baú atualizada com sucesso!",
         "move_cancel": "Ação cancelada.",
-        "teleport": "Teleportar",
+        "teleport": "🚀 Teleportar",
         "teleport_desc": "Teleportar para este baú",
         "teleport_success": "Você foi teleportado para o baú ",
-        "delete": "Excluir",
-        "delete_desc": "Excluir este baú",
-        "delete_confirm": "Tem certeza que deseja excluir este baú?"
+        "delete": "🗑️ Excluir",
+        "delete_desc": "Excluir permanentemente este baú",
+        "delete_confirm": "Tem certeza que deseja excluir este baú? Esta ação é permanente!"
+    },
+    "editmenu": {
+        "rename_label": "Novo Nome",
+        "duplicate_title": "📋 Duplicar Baú",
+        "duplicate_desc": "Cria uma cópia deste baú com todas as configurações",
+        "duplicate_name_desc": "Digite um nome para a cópia do baú",
+        "duplicate_pick_loc": "Agora escolha a localização da cópia no mapa (E para salvar, BACKSPACE para cancelar)",
+        "duplicate_success": "Baú duplicado com sucesso:"
     },
     "error": {
         "admin_only": "Acesso negado: apenas administradores."
